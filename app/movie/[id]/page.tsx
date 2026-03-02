@@ -46,7 +46,7 @@ export default async function MoviePage({
 }: {
   params: { id: string };
 }) {
-  const { id } = params;
+  const { id } = await params;
 
   const movie = await getMovie(id);
   if (!movie) return <div>Movie not found</div>;
