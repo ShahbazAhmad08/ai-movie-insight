@@ -49,6 +49,7 @@ export default async function MoviePage({
   const { id } = await params;
 
   const movie = await getMovie(id);
+  console.log("Movie data:", movie);
   if (!movie) return <div>Movie not found</div>;
 
   const reviews = await getReviews(id);
