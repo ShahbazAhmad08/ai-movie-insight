@@ -29,7 +29,9 @@ export async function GET(req: Request) {
 
     const reviewData = await reviewRes.json();
     const reviews = reviewData.results?.map((r: any) => r.content) || [];
-
+    console.log(
+      `Fetched ${reviews.length} reviews for IMDB ID ${imdbId} (TMDB ID ${movie.id})`,
+    );
     return NextResponse.json({
       reviews,
       source: reviews.length ? "tmdb" : "tmdb-empty",
