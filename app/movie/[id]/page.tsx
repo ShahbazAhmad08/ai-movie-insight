@@ -2,10 +2,7 @@ export const dynamic = "force-dynamic";
 import MovieCard from "@/components/MovieCard";
 import SentimentCard from "@/components/SentimentCard";
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
-
+const baseUrl = process.env.VERCEL_URL;
 async function getMovie(id: string) {
   const res = await fetch(`${baseUrl}/api/movie?id=${id}`, {
     cache: "no-store",
