@@ -2,8 +2,12 @@ export const dynamic = "force-dynamic";
 import MovieCard from "@/components/MovieCard";
 import SentimentCard from "@/components/SentimentCard";
 
+const baseUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
+
 async function getMovie(id: string) {
-  const res = await fetch(`http://localhost:3000/api/movie?id=${id}`, {
+  const res = await fetch(`${baseUrl}/api/movie?id=${id}`, {
     cache: "no-store",
   });
 
@@ -13,7 +17,7 @@ async function getMovie(id: string) {
 }
 
 async function getReviews(id: string) {
-  const res = await fetch(`http://localhost:3000/api/reviews?id=${id}`, {
+  const res = await fetch(`${baseUrl}/api/reviews?id=${id}`, {
     cache: "no-store",
   });
 
@@ -24,7 +28,7 @@ async function getReviews(id: string) {
 }
 
 async function getSentiment(movie: any, reviews: string[]) {
-  const res = await fetch(`http://localhost:3000/api/sentiment`, {
+  const res = await fetch(`${baseUrl}/api/sentiment`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
