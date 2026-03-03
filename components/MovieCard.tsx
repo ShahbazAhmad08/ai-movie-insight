@@ -1,10 +1,11 @@
 "use client";
 
+import { Movie } from "@/types/movie";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
 type MovieProps = {
-  movie: any;
+  movie: Movie;
 };
 
 export default function MovieCard({ movie }: MovieProps) {
