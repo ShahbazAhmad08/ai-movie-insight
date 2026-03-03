@@ -1,8 +1,8 @@
 "use client";
 
-import { Movie } from "@/types/movie";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import type { Movie } from "@/types/movie";
 
 type MovieProps = {
   movie: Movie;
@@ -10,7 +10,7 @@ type MovieProps = {
 
 export default function MovieCard({ movie }: MovieProps) {
   const posterSrc =
-    movie?.Poster && movie.Poster !== "N/A" ? movie.Poster : "/placeholder.png";
+    movie.Poster && movie.Poster !== "N/A" ? movie.Poster : "/placeholder.png";
 
   return (
     <motion.div
@@ -19,10 +19,10 @@ export default function MovieCard({ movie }: MovieProps) {
       transition={{ duration: 0.7 }}
       className="backdrop-blur-xl bg-white/90 text-black shadow-2xl rounded-3xl p-6 md:flex gap-8"
     >
-      <div className="flex justify-center md:block">
+      <div className="flex justify-center md:block shrink-0">
         <Image
           src={posterSrc}
-          alt={movie?.Title || "Movie Poster"}
+          alt={movie.Title ? `${movie.Title} poster` : "Movie Poster"}
           width={256}
           height={384}
           className="rounded-xl shadow-xl object-cover"
@@ -31,17 +31,17 @@ export default function MovieCard({ movie }: MovieProps) {
       </div>
 
       <div className="mt-6 md:mt-0 space-y-4">
-        <h1 className="text-4xl font-extrabold tracking-tight">
-          {movie?.Title}
-        </h1>
+        <h1 className="text-4xl font-extrabold tracking-tight">{movie.Title}</h1>
 
         <div className="flex flex-wrap gap-4 text-gray-700 text-sm">
-          <span>📅 {movie?.Year}</span>
-          <span>⭐ {movie?.imdbRating}</span>
-          <span>🎭 {movie?.Actors}</span>
+          <span>📅 {movie.Year}</span>
+          <span>⭐ {movie.imdbRating}</span>
+          <span>🎭 {movie.Genre}</span>
         </div>
 
-        <p className="text-gray-800 leading-relaxed mt-4">{movie?.Plot}</p>
+        <p className="text-gray-600 text-sm">{movie.Actors}</p>
+
+        <p className="text-gray-800 leading-relaxed mt-4">{movie.Plot}</p>
       </div>
     </motion.div>
   );

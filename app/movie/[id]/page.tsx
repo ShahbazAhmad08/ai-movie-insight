@@ -1,11 +1,11 @@
 export const dynamic = "force-dynamic";
 
+import Link from "next/link";
 import MovieCard from "@/components/MovieCard";
 import SentimentCard from "@/components/SentimentCard";
 import type { Movie } from "@/types/movie";
 
-// ✅ Fix: VERCEL_URL already contains the full hostname on Vercel (no https:// prefix needed)
-// VERCEL_PROJECT_PRODUCTION_URL is the stable production URL, VERCEL_URL is per-deployment
+// ✅ Resolves the correct base URL on Vercel vs localhost
 function getBaseUrl(): string {
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
     return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
@@ -19,9 +19,7 @@ function getBaseUrl(): string {
 async function getMovie(id: string): Promise<Movie | null> {
   const baseUrl = getBaseUrl();
   try {
-    const res = await fetch(`${baseUrl}/api/movie?id=${id}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(`${baseUrl}/api/movie?id=${id}`, { cache: "no-store" });
     if (!res.ok) return null;
     return res.json();
   } catch {
@@ -32,9 +30,7 @@ async function getMovie(id: string): Promise<Movie | null> {
 async function getReviews(id: string): Promise<string[]> {
   const baseUrl = getBaseUrl();
   try {
-    const res = await fetch(`${baseUrl}/api/reviews?id=${id}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(`${baseUrl}/api/reviews?id=${id}`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = await res.json();
     return data.reviews || [];
@@ -61,7 +57,7 @@ async function getSentiment(
   }
 }
 
-// ✅ Fix: Next.js 15 — params is now a Promise
+// ✅ Next.js 15: params is a Promise
 export default async function MoviePage({
   params,
 }: {
@@ -70,11 +66,26 @@ export default async function MoviePage({
   const { id } = await params;
 
   const movie = await getMovie(id);
+
   if (!movie) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-white text-xl">Movie not found. Please check the IMDb ID.</p>
-      </div>
+      <main className="min-h-screen flex flex-col items-center justify-center gap-6 px-4">
+        <div className="text-center space-y-3">
+          <p className="text-6xl">🎬</p>
+          <h1 className="text-2xl font-bold text-white">Movie Not Found</h1>
+          <p className="text-gray-400 text-sm">
+            No movie found for IMDb ID <span className="font-mono text-indigo-400">{id}</span>.
+            <br />
+            Make sure it starts with <span className="font-mono">tt</span> followed by digits.
+          </p>
+        </div>
+        <Link
+          href="/"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl transition"
+        >
+          ← Try Another Movie
+        </Link>
+      </main>
     );
   }
 
@@ -83,6 +94,14 @@ export default async function MoviePage({
 
   return (
     <main className="min-h-screen p-6 md:p-10 space-y-8 max-w-5xl mx-auto">
+      {/* Back navigation */}
+      <Link
+        href="/"
+        className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition"
+      >
+        ← Back to Search
+      </Link>
+
       <MovieCard movie={movie} />
       {sentiment && <SentimentCard sentiment={sentiment} />}
     </main>
